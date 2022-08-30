@@ -22,15 +22,31 @@
 ```
 pip install -r requirements.txt
 ```
-### 4. Running the project
-```
-python manage.py runserver  or 
-python3 manage.py runserver
-```
-# The project is built with docker. Then make sure that docker is 
+
+# 4. The project is built with docker. Then make sure that docker is 
 # installed on your computer
 
 ```
 consult the doc here
 https://docs.docker.com/get-started/
 ```
+
+### 5. Creating a virtual container (Make sure that docker service is running on your computer)
+```
+sudo docker-compose up -d --build
+```
+
+### 6. Migrations executions 
+```
+sudo docker-compose exec restaurant python3 manage.py makemigrations
+sudo docker-compose exec restaurant python3 manage.py migrate
+```
+
+
+### 7. Running the project (with docker)
+```
+sudo docker-compose exec restaurant python3 manage.py runserver or
+sudo docker-compose exec restaurant python manage.py runserver
+
+```
+
