@@ -81,12 +81,12 @@ class LoginSerializer(serializers.ModelSerializer):
             'refresh':user.create_jwt_pair_for_user()['refresh'],
             'access': user.create_jwt_pair_for_user()['access']
         }
-
+        user.tokens=self.tokens
 
         return {
                 "username":user.username,
                 "password":user.password,
-                "tokens":self.tokens
+                "tokens":user.tokens
             }
             
         return super().validate(attrs)

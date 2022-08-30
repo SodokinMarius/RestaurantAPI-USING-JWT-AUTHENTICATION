@@ -61,12 +61,12 @@ class RestaurantAPIView(ListCreateAPIView):
 #Vue de gestion de details du restaurants
 class RestaurantDetail(RetrieveUpdateDestroyAPIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes=[permissions.IsAuthenticated,
-                        AuthorOrReadOnly] #<----- Permission
+    permission_classes=[permissions.IsAuthenticated
+                        ] #<----- Permission
     
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
-    lookup_field = "email"
+    lookup_field = "username"
 
     '''def get_object(self, pk):
         try:
