@@ -19,8 +19,8 @@ urlpatterns=[
             path('restaurants/<int:pk>/',views.RestaurantDetail.as_view(),name='single-restaurant'),
              
              #Urls pour obtenir la liste des utilisateurs
-            path('users/', views.UserList.as_view()),
-            path('users/<int:pk>/', views.UserDetail.as_view()),
+            #path('users/', views.UserList.as_view()),
+            #path('users/<int:pk>/', views.UserDetail.as_view()),
              
              ]
 

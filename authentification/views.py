@@ -57,8 +57,8 @@ class LoginView(generics.GenericAPIView):
         return Response(data=content,status=status.HTTP_200_OK)
 
 '''
-'''
-class SignUpView(ModelViewSet, TokenObtainPairView):
+
+'''class SignUpView(ModelViewSet, TokenObtainPairView):
     serializer_class = SignUpSerializer
     permission_classes = (AllowAny,)
     http_method_names = ['post']
@@ -69,15 +69,15 @@ class SignUpView(ModelViewSet, TokenObtainPairView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
-        res = {
+        token = {
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
 
         return Response({
             "user": serializer.data,
-            "refresh": res["refresh"],
-            "token": res["access"]
+            "refresh": token["refresh"],
+            "token": token["access"]
         },status=status.HTTP_201_CREATED)
                         
 class LoginView(ModelViewSet, TokenObtainPairView):
@@ -93,5 +93,5 @@ class LoginView(ModelViewSet, TokenObtainPairView):
         except TokenError as e:
             raise InvalidToken(e.args[0])
 
-        return Response(serializer.validated_data, status=status.HTTP_200_OK)
-'''
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)'''
+
