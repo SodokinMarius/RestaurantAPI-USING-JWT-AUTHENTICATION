@@ -8,7 +8,7 @@
  git clone git remote add origin https://github.com/SodokinMarius/RestaurantAPI-USING-JWT-AUTHENTICATION.git
 
  
- cd RestaurantAPI
+ cd RestaurantAPI-USING-JWT-AUTHENTICATION
  ```
 
 ### 2. Creating the  virtuel environnement 
