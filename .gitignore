@@ -1,0 +1,8 @@
+#environment variables
+env
+
+#database
+*.sqlite3
+
+#migrations files
+__pycache__
