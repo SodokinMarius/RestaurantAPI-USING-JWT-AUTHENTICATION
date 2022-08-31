@@ -10,7 +10,6 @@ from django.contrib import auth
 
 from rest_framework.exceptions import AuthenticationFailed
 
-
 class SignUpSerializer(serializers.ModelSerializer):
     #restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
     
