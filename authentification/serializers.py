@@ -16,15 +16,7 @@ class SignUpSerializer(serializers.ModelSerializer):
     class Meta:
         model=User 
         fields=['name','username','password','is_verified','is_active','is_staff','created_at','updated_at']
-        #list_display=('name','username','password')
         read_only_fields=('is_verified','is_active','is_staff','created_at','updated_at')
-    
-    def validate(self,attrs):
-        username_exists=User.objects.filter(username=attrs["username"]).exists()
-
-        if username_exists:
-            raise ValidationError("Username has already been used")
-        return super().validate(attrs)
     
     def create(self,validated_data):
         try:
@@ -47,7 +39,7 @@ class LoginSerializer(serializers.ModelSerializer):
             'refresh': user.create_jwt_pair_for_user()['refresh'],
             'access': user.create_jwt_pair_for_user()['access']
         }
-
+        
     class Meta:
         model=User
         fields=('name','username','password','tokens')
@@ -56,16 +48,8 @@ class LoginSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         username=attrs.get('username','')
         password=attrs.get('password','')
-        
-        loged_user=User.objects.get(username=username)
-        print("======typed password======="+str(password))
-        print("======retrieved password======="+str(loged_user.password))
-
-
         user=auth.authenticate(username=username,password=password)
-        print("======retrieved password======="+str(user.username))
 
-        
         if user is None :
             raise AuthenticationFailed('Invalid credentials, please try again !')
         
