@@ -16,7 +16,7 @@ urlpatterns = [
 
 urlpatterns=[ 
             path('restaurants/',views.RestaurantAPIView.as_view(),name='restaurants-list'),
-            path('restaurants/<int:pk>/',views.RestaurantDetail.as_view(),name='single-restaurant'),
+            path('restaurants/<int:id>/',views.RestaurantDetail.as_view(),name='single-restaurant'),
              
              #Urls pour obtenir la liste des utilisateurs
             #path('users/', views.UserList.as_view()),

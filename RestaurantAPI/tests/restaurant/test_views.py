@@ -25,7 +25,7 @@ def test_user_register_normally(client,user_data,register_url):
     
     assert data["name"]==user_data['name']
     assert data['username']==user_data['username']
-    assert data['password']==user_data['password']
+                                                             #<--------Correction: Enlever le password hashé
     assert "User created successfully" in resp.data["message"]
 
 
@@ -63,7 +63,7 @@ def test_login_user_after_verifying(client,register_url,login_url,user_data):
     
     resp=client.post(login_url,real_login_infos,format="json")
 
-    assert resp.status_code!=status.HTTP_200_OK             #<------- A revoir correctement
+    assert resp.status_code==status.HTTP_200_OK             #<-------- Cette ligne a été revue et marche enfin
 
 
 
@@ -128,13 +128,13 @@ def test_add_restaurant_invalid_json_keys(client,restaurant_url):
     data={ 
         "name": "PATIENCE",
         "description": "Fais comme chez toi",
-        "lng":900,
-        
+        "lng":900, 
+                      # Ici le champs lat a été retiré   
         }
 
     response=client.post(restaurant_url,data,format="json")
     
-    assert response.status_code==status.HTTP_404_NOT_FOUND
+    assert response.status_code==status.HTTP_400_BAD_REQUEST
     restaurants=Restaurant.objects.all()
     assert len(restaurants)==0
 

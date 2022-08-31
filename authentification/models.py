@@ -30,7 +30,6 @@ class CustomUserManager(BaseUserManager):
         if not name:
             raise ValueError("User must have a full name")
 
-
         user=self.create_user(name,username,password)
         user.admin = True
         user.staff = True

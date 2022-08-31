@@ -27,24 +27,24 @@ class RestaurantAPIView(ListCreateAPIView):
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
     #la permission à exploiter pour l'authentification
-    authentication_classes = (TokenAuthentication,)
+    #authentication_classes = (TokenAuthentication,)
 
-    permission_classes=[permissions.IsAuthenticated] #l'utilisateur doit d'abord s'authentifier d'abord avant tout
+    permission_classes=[permissions.AllowAny] #l'utilisateur doit d'abord s'authentifier d'abord avant tout
     
     def list(self,request,*args,**kwargs):
          #Distance, d = (3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)])*1.609344 
          #Les coordonnées rensignées par l'utilisateur
-        longitude=float(request.data.get("lng"))
-        latitude=float(request.data.get("lat"))
+        longitude=float(request.GET.get("lng"))
+        latitude=float(request.GET.get("lat"))
         
         nearbyRestaurants=[]
         
         #Recherche des restaurants
         for restaurant in self.queryset:
             #les coordonnées du rectaurant en tour de parcours
-            current_long=float(restaurant.lng)
-            current_lat=float(restaurant.lat)
-            distance=(3963.0 * acos[(sin(latitude) * sin(current_lat)) + cos(latitude) * cos(current_lat) * cos(current_long - longitude)])*1.609344
+            current_long=restaurant.lng
+            current_lat=restaurant.lat
+            distance=(3963.0 * acos((sin(latitude) * sin(current_lat)) + cos(latitude) * cos(current_lat) * cos(current_long - longitude)))*1.609344
 
             if distance<=3:
                 nearbyRestaurants.append(restaurant)
@@ -54,31 +54,29 @@ class RestaurantAPIView(ListCreateAPIView):
         
     #Associons maintenant les Restaurants aux utilisateurs les ayant créer
     #Ce qui permet de savoir celui qui a fait une action donnée
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+   # def perform_create(self, serializer):
+        #serializer.save(owner=self.request.user)
 
 
 #Vue de gestion de details du restaurants
 class RestaurantDetail(RetrieveUpdateDestroyAPIView):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes=[permissions.IsAuthenticated
+    #authentication_classes = (TokenAuthentication,)
+    permission_classes=[permissions.AllowAny
                         ] #<----- Permission
     
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
-    lookup_field = "username"
+    lookup_field = "id"
 
     '''def get_object(self, pk):
         try:
             return Restaurant.objects.get(pk=pk)
         except Restaurant.DoesNotExist:
             raise Http404
-
     def get(self, request, pk, format=None):
         restaurant = self.get_object(pk)
         serializer = RestaurantSerializer(restaurant)
         return Response(serializer.data)
-
     def put(self, request, pk, format=None):
         restaurant = self.get_object(pk)
         serializer = RestaurantSerializer(restaurant, data=request.data)
@@ -86,7 +84,6 @@ class RestaurantDetail(RetrieveUpdateDestroyAPIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     def delete(self, request, pk, format=None):
         restaurant = self.get_object(pk)
         restaurant.delete()
@@ -105,6 +102,3 @@ class UserDetail(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
-
-
-
