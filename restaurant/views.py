@@ -14,7 +14,7 @@ from math import *
 from django.http import Http404
 
 from django.contrib.auth.models import User
-from authentification.serializers import SignUpSerializer
+from authentification.serializers import SignUpSerializer,UserSerializer
 from django.contrib.auth import get_user_model
 #imports for permissions
 from rest_framework import permissions 
@@ -55,8 +55,8 @@ class RestaurantAPIView(ListCreateAPIView):
         
     #Associons maintenant les Restaurants aux utilisateurs les ayant créer
     #Ce qui permet de savoir celui qui a fait une action donnée
-   # def perform_create(self, serializer):
-        #serializer.save(owner=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 #Vue de gestion de details du restaurants
@@ -64,7 +64,7 @@ class RestaurantDetail(RetrieveUpdateDestroyAPIView):
     #authentication_classes = (TokenAuthentication,)
     permission_classes=[permissions.AllowAny
                         ] #<----- Permission
-    
+     
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
     lookup_field = "id"
@@ -95,11 +95,10 @@ class UserList(generics.ListAPIView):
     User = get_user_model() # Cette ligne parceque le model par defaut est personnalisé
 
     queryset = User.objects.all()
-    serializer_class = SignUpSerializer
-
+    serializer_class = UserSerializer
 
 class UserDetail(generics.RetrieveAPIView):
     User = get_user_model()
 
     queryset = User.objects.all()
-    serializer_class = SignUpSerializer
+    serializer_class = UserSerializer

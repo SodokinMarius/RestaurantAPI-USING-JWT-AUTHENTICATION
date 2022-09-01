@@ -5,7 +5,7 @@ from .models import User
 from rest_framework.response import Response 
 from rest_framework.views import APIView
 
-from .serializers import SignUpSerializer,LoginSerializer
+from .serializers import SignUpSerializer,LoginSerializer,UserSerializer
 
 
 from authentification import serializers
@@ -18,7 +18,17 @@ from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken'''
 
- 
+#create views for User
+'''class UserAPIView(generics.ListCreateAPIView):
+    serializer_class=UserSerializer
+    queryset=User.objects.all()
+
+class UserDetail(generics.RetrieveDestroyAPIView):
+    serializer_class=UserSerializer
+    queryset=User.objects.all()
+    lookup_field="id"'''
+
+
 class SignUpView(generics.GenericAPIView):
     serializer_class=SignUpSerializer
 
@@ -37,7 +47,7 @@ class SignUpView(generics.GenericAPIView):
             return Response(data=response,status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    
+
 class LoginView(generics.GenericAPIView):
     serializer_class=LoginSerializer
 

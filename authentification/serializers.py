@@ -7,11 +7,21 @@ from restaurant.models import Restaurant
 from .models import User
 from django.contrib import auth
 #from django.contrib.auth.models import User 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from rest_framework.exceptions import AuthenticationFailed
 
+class UserSerializer(serializers.ModelSerializer):
+    restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
+    class Meta:
+        model=User
+        fields=['id','name','username','password','is_verified','is_active','is_staff','created_at','updated_at']
+        read_only_fields=('is_verified','is_active','is_staff','created_at','updated_at')
+        lookup_field='username'
+        
+        
+   
 class SignUpSerializer(serializers.ModelSerializer):
-    #restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
     
     class Meta:
         model=User 
