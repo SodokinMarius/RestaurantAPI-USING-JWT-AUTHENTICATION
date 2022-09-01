@@ -11,18 +11,18 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from rest_framework.exceptions import AuthenticationFailed
 
-class UserSerializer(serializers.ModelSerializer):
+
+'''class UserSerializer(serializers.ModelSerializer):
     restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
     class Meta:
         model=User
-        fields=['id','name','username','password','is_verified','is_active','is_staff','created_at','updated_at']
+        fields=['id','name','username','password','is_verified','is_active','is_staff','created_at','updated_at','restaurants']
         read_only_fields=('is_verified','is_active','is_staff','created_at','updated_at')
-        lookup_field='username'
+        lookup_field="username"'''
         
-        
-   
-class SignUpSerializer(serializers.ModelSerializer):
     
+class SignUpSerializer(serializers.ModelSerializer):
+
     class Meta:
         model=User 
         fields=['name','username','password','is_verified','is_active','is_staff','created_at','updated_at']
@@ -33,8 +33,11 @@ class SignUpSerializer(serializers.ModelSerializer):
             user=User.objects.get(username=validated_data['username'])
         except User.DoesNotExist:
             user=User.objects.create_user(**validated_data)
-
+       
         return user
+
+
+
 
 class LoginSerializer(serializers.ModelSerializer):
     name=serializers.CharField(max_length=100,read_only=True)

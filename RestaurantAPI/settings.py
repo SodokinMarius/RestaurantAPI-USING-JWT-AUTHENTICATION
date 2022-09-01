@@ -60,7 +60,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",   #<----- JWT config
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated", 
-                                    'rest_framework.permissions.IsAdminUser',#<---- Configuration pour la permission
+                                   #<---- Configuration pour la permission
     ), 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 3,

@@ -16,6 +16,7 @@ from django.http import Http404
 from django.contrib.auth.models import User
 from authentification.serializers import SignUpSerializer,UserSerializer
 from django.contrib.auth import get_user_model
+
 #imports for permissions
 from rest_framework import permissions 
 from rest_framework.authentication import TokenAuthentication
@@ -64,10 +65,10 @@ class RestaurantDetail(RetrieveUpdateDestroyAPIView):
     #authentication_classes = (TokenAuthentication,)
     permission_classes=[permissions.AllowAny
                         ] #<----- Permission
-     
+ 
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
-    lookup_field = "id"
+    lookup_field = "pk"
 
     '''def get_object(self, pk):
         try:
