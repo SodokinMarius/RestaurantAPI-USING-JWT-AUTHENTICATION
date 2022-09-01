@@ -21,7 +21,6 @@ router=SimpleRouter()
 
 router.register('register/',SignupViewSet,basename='user-register')
 router.register('login/',LoginViewSet,basename='user-login')
-router.register('api_keys/',TokenObtainPairView.as_view(),basename='api_keys')
 router.register('user/',UserViewSet,basename='user')
 
 
@@ -46,8 +45,9 @@ urlpatterns = [
     
     path('',include(router.urls)),
     
-    
-    #path('',include('restaurant.urls')),
+    path('api_keys/',TokenObtainPairView.as_view(),name='api_keys'),
+
+    path('',include('restaurant.urls')),
     path('api-auth/', include('rest_framework.urls')), #<---- Pour l'authentication
     #------- swagger urls -----------
     
