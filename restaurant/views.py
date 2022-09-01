@@ -38,9 +38,10 @@ class RestaurantAPIView(ListCreateAPIView):
         latitude=float(request.GET.get("lat"))
         
         nearbyRestaurants=[]
-        
+        restaurants = Restaurant.objects.all()
+
         #Recherche des restaurants
-        for restaurant in self.queryset:
+        for restaurant in restaurants:
             #les coordonnées du rectaurant en tour de parcours
             current_long=restaurant.lng
             current_lat=restaurant.lat

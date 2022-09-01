@@ -5,18 +5,10 @@ from django.urls import path,include
 from . import views
 from rest_framework.routers import DefaultRouter 
 
-'''router=DefaultRouter()
-
-router.register('restaurants/',views.RestaurantAPIView.as_view(),basename='restaurants')
-router.register('restaurants/<int:pk>/',views.RestaurantDetail.as_view(),basename='single-restaurant')
-
-urlpatterns = [
-    path('',include(router.urls)),
-]'''
 
 urlpatterns=[ 
             path('restaurants/',views.RestaurantAPIView.as_view(),name='restaurants-list'),
-            path('restaurants/<int:id>/',views.RestaurantDetail.as_view(),name='single-restaurant'),
+            path('restaurant/<int:id>/',views.RestaurantDetail.as_view(),name='single-restaurant'),
              
              #Urls pour obtenir la liste des utilisateurs
             #path('users/', views.UserList.as_view()),
@@ -25,4 +17,3 @@ urlpatterns=[
              ]
 
 #urlpatterns = format_suffix_patterns(urlpatterns)
-

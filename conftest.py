@@ -59,6 +59,6 @@ def  restaurant():
 
 @pytest.fixture
 def restaurant_url():
+    
     return reverse('restaurants-list')
-
     

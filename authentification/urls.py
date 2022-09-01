@@ -11,11 +11,6 @@ from rest_framework_simplejwt.views import (
 from authentification import views
 from rest_framework.routers import DefaultRouter
 
-'''router=DefaultRouter()
-router.register('register/',views.SignUpView.as_view(),basename='user-register')
-router.register('login/',views.LoginView.as_view(),basename='user-login')
-router.register('api_keys/',TokenObtainPairView.as_view(),basename='api_keys')
-'''
 urlpatterns = [
     path('register/',views.SignUpView.as_view(),name='user-register'),
     path('login/',views.LoginView.as_view(),name='user-login'),
