@@ -57,6 +57,7 @@ class LoginSerializer(serializers.ModelSerializer):
         model=User
         fields=('id','name','username','password','tokens')
         read_only_fields=('id','name','tokens',)
+        lookup_field="username"
     
     def validate(self, attrs):
         username=attrs.get('username','')
