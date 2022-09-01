@@ -9,6 +9,20 @@ from rest_framework.authtoken import views
 
 #from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
+from authentification.viewsets import LoginViewSet,UserViewSet,SignupViewSet
+from rest_framework.routers import DefaultRouter,SimpleRouter
+
+router=SimpleRouter()
+
+router.register('register/',SignupViewSet,basename='user-register')
+router.register('login/',LoginViewSet,basename='user-login')
+router.register('api_keys/',TokenObtainPairView.as_view(),basename='api_keys')
+router.register('user/',UserViewSet,basename='user')
 
 
 schema_view = get_schema_view(
@@ -27,7 +41,13 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('authentification.urls')),
-    path('',include('restaurant.urls')),
+    
+    #autehtification urls
+    
+    path('',include(router.urls)),
+    
+    
+    #path('',include('restaurant.urls')),
     path('api-auth/', include('rest_framework.urls')), #<---- Pour l'authentication
     #------- swagger urls -----------
     

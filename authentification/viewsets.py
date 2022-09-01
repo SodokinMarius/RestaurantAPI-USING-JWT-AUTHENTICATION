@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework import filters
-from .serializers import LoginSerializer, SignUpSerializer,UserSerializer,LoginSerialize
+from .serializers import LoginSerializer, SignUpSerializer,UserSerializer
 from .models import User 
 from rest_framework.response import Response 
 from rest_framework import  status 
