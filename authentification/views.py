@@ -11,24 +11,6 @@ from .serializers import SignUpSerializer,LoginSerializer,UserSerializer
 from authentification import serializers
 
 
-# For reviewing
-'''from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import ModelViewSet
-from rest_framework_simplejwt.tokens import RefreshToken'''
-
-#create views for User
-'''class UserAPIView(generics.ListCreateAPIView):
-    serializer_class=UserSerializer
-    queryset=User.objects.all()
-
-class UserDetail(generics.RetrieveDestroyAPIView):
-    serializer_class=UserSerializer
-    queryset=User.objects.all()
-    lookup_field="id"'''
-
-
 class SignUpView(generics.GenericAPIView):
     serializer_class=SignUpSerializer
 
