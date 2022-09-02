@@ -26,15 +26,14 @@ class RestaurantViewSet(ModelViewSet):
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
     #la permission à exploiter pour l'authentification
-    #authentication_classes = (TokenAuthentication,)
+    authentication_classes = (TokenAuthentication,)
 
     permission_classes=[permissions.IsAuthenticated] #l'utilisateur doit d'abord s'authentifier d'abord avant tout
-    #permission_classes=[permissions.AllowAny]
     def list(self,request,*args,**kwargs):
          #Distance, d = (3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)])*1.609344 
          #Les coordonnées rensignées par l'utilisateur
          if request.user.is_authenticated:
-            print("------------oui oui oui ---")
+         
             try:
                 longitude=float(request.GET.get("lng"))
                 latitude=float(request.GET.get("lat"))

@@ -10,6 +10,9 @@ from authentification.viewsets import LoginViewSet,UserViewSet,SignupViewSet
 from rest_framework.routers import SimpleRouter
 
 
+from rest_framework.authtoken import views
+
+
 schema_view = get_schema_view(
    openapi.Info(
       title="Restaurant API",
@@ -34,6 +37,8 @@ router.register('user',UserViewSet,basename='users') #<---- Users Urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     
+    path('user_auth/', views.obtain_auth_token),
+
     path('',include('authentification.urls')),   # <----- authentification urls
     
     
