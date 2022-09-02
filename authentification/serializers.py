@@ -11,6 +11,12 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from rest_framework.exceptions import AuthenticationFailed
 
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.settings import api_settings
+from django.contrib.auth.models import update_last_login
+from django.core.exceptions import ObjectDoesNotExist
+
 
 class UserSerializer(serializers.ModelSerializer):
     restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
@@ -37,8 +43,24 @@ class SignUpSerializer(serializers.ModelSerializer):
         return user
 
 
+class LoginSerializer(TokenObtainPairSerializer):
+    
+    def validate(self, attrs):
+        user_data= super().validate(attrs)
+
+        token_refresh = self.get_token(self.user)
+
+        user_data['user'] = UserSerializer(self.user).data
+        user_data['refresh'] = str(token_refresh)
+        user_data['access'] = str(token_refresh.access_token)
+
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
+
+        return user_data
 
 
+'''
 class LoginSerializer(serializers.ModelSerializer):
     name=serializers.CharField(max_length=100,read_only=True)
     username=serializers.CharField(max_length=50)
@@ -86,5 +108,5 @@ class LoginSerializer(serializers.ModelSerializer):
                 "tokens":user.tokens
             }
             
-        return super().validate(attrs)
+        return super().validate(attrs)'''
 
