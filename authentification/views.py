@@ -15,7 +15,6 @@ class SignUpView(generics.GenericAPIView):
     serializer_class=SignUpSerializer
 
     permission_classes=[]
-
     
     def post(self,request:Request):
         data=request.data 
