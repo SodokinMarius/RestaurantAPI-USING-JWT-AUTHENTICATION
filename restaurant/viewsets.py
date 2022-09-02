@@ -59,3 +59,7 @@ class RestaurantViewSet(ModelViewSet):
     #Ce qui permet de savoir celui qui a fait une action donnée
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+        
+        
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user) #Renvoyer uniquemenUser donnét les données d'un 
