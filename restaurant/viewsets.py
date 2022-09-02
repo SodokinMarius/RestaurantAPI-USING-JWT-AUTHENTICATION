@@ -13,9 +13,6 @@ from math import *
  
 from django.http import Http404
 
-from django.contrib.auth.models import User
-from authentification.serializers import SignUpSerializer,UserSerializer
-from django.contrib.auth import get_user_model
 
 #imports for permissions
 from rest_framework import permissions 
@@ -31,29 +28,37 @@ class RestaurantViewSet(ModelViewSet):
     #la permission à exploiter pour l'authentification
     #authentication_classes = (TokenAuthentication,)
 
-    permission_classes=[permissions.AllowAny] #l'utilisateur doit d'abord s'authentifier d'abord avant tout
-    
+    permission_classes=[permissions.IsAuthenticated] #l'utilisateur doit d'abord s'authentifier d'abord avant tout
+    #permission_classes=[permissions.AllowAny]
     def list(self,request,*args,**kwargs):
          #Distance, d = (3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)])*1.609344 
          #Les coordonnées rensignées par l'utilisateur
-        longitude=float(request.GET.get("lng"))
-        latitude=float(request.GET.get("lat"))
-        
-        nearbyRestaurants=[]
-        restaurants = Restaurant.objects.all()
+         if request.user.is_authenticated:
+            print("------------oui oui oui ---")
+            try:
+                longitude=float(request.GET.get("lng"))
+                latitude=float(request.GET.get("lat"))
+                
+                nearbyRestaurants=[]
+                restaurants = Restaurant.objects.all()
 
-        #Recherche des restaurants
-        for restaurant in restaurants:
-            #les coordonnées du rectaurant en tour de parcours
-            current_long=restaurant.lng
-            current_lat=restaurant.lat
-            distance=(3963.0 * acos((sin(latitude) * sin(current_lat)) + cos(latitude) * cos(current_lat) * cos(current_long - longitude)))*1.609344
+                #Recherche des restaurants
+                for restaurant in restaurants:
+                    #les coordonnées du rectaurant en tour de parcours
+                    current_long=restaurant.lng
+                    current_lat=restaurant.lat
+                    distance=(3963.0 * acos((sin(latitude) * sin(current_lat)) + cos(latitude) * cos(current_lat) * cos(current_long - longitude)))*1.609344
 
-            if distance<=3:
-                nearbyRestaurants.append(restaurant)
+                    if distance<=3:
+                        nearbyRestaurants.append(restaurant)
+                
+                serializer=self.get_serializer(nearbyRestaurants,many=True)
+                return Response(serializer.data)
+            except ValueError:
+                return Response({"message":"The access Token is not provided or is not valid "})
 
-        serializer=self.get_serializer(nearbyRestaurants,many=True)
-        return Response(serializer.data)
+            except TypeError:
+                return Response({"message":"The expected data are not provided."})
         
     #Associons maintenant les Restaurants aux utilisateurs les ayant créer
     #Ce qui permet de savoir celui qui a fait une action donnée
