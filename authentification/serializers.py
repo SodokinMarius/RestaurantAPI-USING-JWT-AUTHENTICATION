@@ -44,13 +44,13 @@ class SignUpSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(TokenObtainPairSerializer):
-    
+    serializer_class=UserSerializer
     def validate(self, attrs):
         user_data= super().validate(attrs)
 
         token_refresh = self.get_token(self.user)
 
-        user_data['user'] = UserSerializer(self.user).data
+        user_data['user'] = self.serializer_class(self.user).data
         user_data['refresh'] = str(token_refresh)
         user_data['access'] = str(token_refresh.access_token)
 
