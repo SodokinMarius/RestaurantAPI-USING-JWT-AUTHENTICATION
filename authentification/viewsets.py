@@ -21,7 +21,7 @@ class UserViewSet(ModelViewSet):
         lookup_field_value = self.kwargs[self.lookup_field]
 
         user = User.objects.get(lookup_field_value)
-        self.check_object_permissions(self.request, obj)
+        self.check_object_permissions(self.request, user)
 
         return user
 
@@ -34,12 +34,11 @@ class LoginViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer=self.get_serializer(data=request.data)
         
-        try:
-            serializer.is_valid(raise_exception=True) 
-        except Exception as ex:
-            return  Response(data=serializer.errors,status_code=status.HTTP_400_BAD_REQUEST)
-        response={"message": "User connected successfully. ","data":serializer.validated_data}
-        return Response(data=response,status=status.HTTP_200_OK)
+        if serializer.is_valid() :
+            response={"message": "User connected successfully. ","data":serializer.validated_data}
+            return Response(data=response,status=status.HTTP_200_OK)
+        return  Response(data=serializer.errors,status_code=status.HTTP_400_BAD_REQUEST)
+        
     
    
 class SignupViewSet(ModelViewSet):
@@ -53,7 +52,7 @@ class SignupViewSet(ModelViewSet):
 
         if serializer.is_valid():
             user = serializer.save()
-            response={"message": "User connected successfully. ","data":serializer.validated_data}
+            response={"message": "User created successfully. ","data":serializer.validated_data}
             return Response(data=response,status=status.HTTP_200_OK)
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
