@@ -11,7 +11,7 @@ class Restaurant(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     updated_date=models.DateTimeField(auto_now=True)
    
-    owner = models.ForeignKey(User, related_name='restaurants', on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='restaurants', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
