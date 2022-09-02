@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
      'rest_authtoken',
      'drf_yasg', #<--------- swagger (no more used)
-     'rest_auth',
-     #'drf-spectacular', #<--- schema generator used
+    
+     
 ]
 
 MIDDLEWARE = [
@@ -68,7 +68,6 @@ REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_authtoken.auth.AuthTokenAuthentication', # <---- rest_authtoken config
     ),
-    #'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',   # <------- line for spectaculor config
     
 
 
