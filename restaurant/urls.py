@@ -8,7 +8,7 @@ from rest_framework.routers import SimpleRouter
 
 routeur=SimpleRouter()
 
-routeur.register('restaurants/',RestaurantViewSet,basename='restaurants-list')
+routeur.register('restaurants',RestaurantViewSet,basename='restaurants-list')
 
 urlpatterns=[ 
             path('',include(routeur.urls)),

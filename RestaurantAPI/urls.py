@@ -5,23 +5,9 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework.authtoken import views
-
-#from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
 
 from authentification.viewsets import LoginViewSet,UserViewSet,SignupViewSet
-from rest_framework.routers import DefaultRouter,SimpleRouter
-
-router=SimpleRouter()
-
-router.register('register/',SignupViewSet,basename='user-register')
-router.register('login/',LoginViewSet,basename='user-login')
-router.register('user/',UserViewSet,basename='user')
+from rest_framework.routers import SimpleRouter
 
 
 schema_view = get_schema_view(
@@ -37,29 +23,30 @@ schema_view = get_schema_view(
    permission_classes=[permissions.AllowAny],
 )
 
+
+
+router=SimpleRouter()
+
+
+router.register('user',UserViewSet,basename='users') #<---- Users Urls
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('authentification.urls')),
     
-    #autehtification urls
+    path('',include('authentification.urls')),   # <----- authentification urls
     
-    path('',include(router.urls)),
     
-    path('api_keys/',TokenObtainPairView.as_view(),name='api_keys'),
+    path('',include(router.urls)),    # <--------- main app Urls
+    
 
-    path('',include('restaurant.urls')),
-    path('api-auth/', include('rest_framework.urls')), #<---- Pour l'authentication
+    path('',include('restaurant.urls')),   #<------ Restaurants urls
+    
     #------- swagger urls -----------
     
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
-    # ------------ Spectaculor urls -----
-    # YOUR PATTERNS
-    #path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-     #Optional UI:
-    #path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    #path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
