@@ -13,8 +13,8 @@ from rest_framework.routers import SimpleRouter
 
 router=SimpleRouter()
 
-router.register('register',SignupViewSet,basename='user-register')
-router.register('login',LoginViewSet,basename='user-login')
+router.register('register',SignupViewSet,basename='register')
+router.register('login',LoginViewSet,basename='login')
    
 
 urlpatterns = [
