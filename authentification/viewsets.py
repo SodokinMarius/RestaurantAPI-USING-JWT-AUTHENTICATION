@@ -1,6 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated,AllowAny
-from rest_framework import filters
 from .serializers import LoginSerializer, SignUpSerializer,UserSerializer
 from .models import User 
 from rest_framework.response import Response 
@@ -50,11 +49,10 @@ class SignupViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
-            user = serializer.save()
-            response={"message": "User created successfully. ","data":serializer.validated_data}
-            return Response(data=response,status=status.HTTP_200_OK)
-        return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)  #New Correction from here
+        serializer.save()
+        response={"message": "User created successfully. ","data":serializer.validated_data}
+        return Response(data=response,status=status.HTTP_200_OK)
 
         
         
