@@ -6,12 +6,12 @@ from .viewsets import RestaurantViewSet
 from rest_framework.routers import SimpleRouter 
 
 
-routeur=SimpleRouter()
+router=SimpleRouter()
 
-routeur.register('restaurants',RestaurantViewSet,basename='restaurants-list')
+router.register('restaurants',RestaurantViewSet,basename='restaurants-list')
 
 urlpatterns=[ 
-            path('',include(routeur.urls)),
+            path('',include(router.urls)),
              
              ]
 
