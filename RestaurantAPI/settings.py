@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 #Permissions avec Django Rest Framework
@@ -56,12 +57,12 @@ REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "errors",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",   #<----- Config important
+        #"rest_framework.authentication.TokenAuthentication",   #<----- Config important
         "rest_framework_simplejwt.authentication.JWTAuthentication",   #<----- JWT config
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated", 
+    #"DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated", 
                                    #<---- Configuration pour la permission
-    ), 
+   # ), 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 3,
     
