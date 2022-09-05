@@ -1,18 +1,13 @@
-from django.shortcuts import render
 #--------- ViewSet import ------------------
-from rest_framework import generics, status 
-from rest_framework.request import Request 
+
 
 from rest_framework.response import Response
 
 from .models import Restaurant 
 from .serializers import RestaurantSerializer
 
-from rest_framework.views import APIView
 from math import *
  
-from django.http import Http404
-
 
 #imports for permissions
 from rest_framework import permissions 
@@ -26,7 +21,7 @@ class RestaurantViewSet(ModelViewSet):
     serializer_class = RestaurantSerializer
     queryset = Restaurant.objects.all()
     #la permission à exploiter pour l'authentification
-    authentication_classes = (TokenAuthentication,)
+    #authentication_classes = (TokenAuthentication,)
 
     permission_classes=[permissions.IsAuthenticated] #l'utilisateur doit d'abord s'authentifier d'abord avant tout
     def list(self,request,*args,**kwargs):
