@@ -1,9 +1,7 @@
-from audioop import reverse
-from email.policy import HTTP
 from authentification.models import User
 from rest_framework import status 
-from django.test import Client
 import pytest
+from conftest import user_data
 
 from  restaurant.models import Restaurant
 from authentification.serializers import SignUpSerializer 
@@ -22,7 +20,7 @@ def test_user_register_normally(client,user_data,register_url):
    
     resp=client.post(register_url,user_data,format="json")
      
-    data=resp.data["data"]
+    data=resp.data
     assert resp.status_code==status.HTTP_201_CREATED
     
     assert data["name"]==user_data['name']
@@ -41,9 +39,9 @@ def test_user_login_with_wrong_username(client,user_data,register_url,login_url)
     client.post(register_url,user_data,format="json")
     resp=client.post(login_url,wrong_login_info,format="json")
 
-    assert resp.status_code==status.HTTP_401_UNAUTHORIZED
+    assert resp.status_code==status.HTTP_400_BAD_REQUEST
     
-
+    
 @pytest.mark.django_db    
 def test_login_user_after_verifying(client,register_url,login_url,user_data):
     real_login_infos={
@@ -89,9 +87,9 @@ def test_create_restaurant(client,restaurant_url,login_url):
         "username":"SODYAM",
         "password":"sodyam@9050"
     }
-    client.post(login_url,real_login_infos,format="json")
+    client.post(login_url,user_data,format="json")
 
-    response=client.post(restaurant_url,data=data,format='json')
+    response=client.post(restaurant_url,data,format='json')
     
     #testons le retour de la requete
     
@@ -109,11 +107,12 @@ def test_create_restaurant(client,restaurant_url,login_url):
 
 #Here we are creating the restaurants without sending data
 @pytest.mark.django_db
-def test_create_restaurant_with_invalid_json(restaurant_url,client):
+def test_create_restaurant_with_invalid_json(restaurant_url,client,login_url):
     restaurants=Restaurant.objects.all()
     
     restaurant_count=len(restaurants) #<<---- Pour compter le nombre de restaurant
     
+    client.post(login_url,user_data,format='json')
     response=client.post(restaurant_url,content_type="application/json")
     
     assert response.status_code==status.HTTP_400_BAD_REQUEST  
@@ -124,7 +123,8 @@ def test_create_restaurant_with_invalid_json(restaurant_url,client):
 
 #Here we are creating the restaurants without providing lat field in the dictionary
 @pytest.mark.django_db
-def test_add_restaurant_invalid_json_keys(client,restaurant_url):
+def test_add_restaurant_invalid_json_keys(client,restaurant_url,login_url,user_data):
+    
     restaurants=Restaurant.objects.all()
     restaurant_account= len(restaurants)
     data={ 
@@ -133,7 +133,8 @@ def test_add_restaurant_invalid_json_keys(client,restaurant_url):
         "lng":900, 
                       # Ici le champs lat a été retiré   
         }
-
+    login_response=client.post(login_url,user_data,format='json')
+    assert login_response.status_code==status.HTTP_200_OK
     response=client.post(restaurant_url,data,format="json")
     
     assert response.status_code==status.HTTP_400_BAD_REQUEST
@@ -141,10 +142,9 @@ def test_add_restaurant_invalid_json_keys(client,restaurant_url):
 
 
 @pytest.mark.django_db
-def test_get_restaurants(client,login_url,restaurant_url,user):
-    login=client.post(login_url,{"username":user.username,"password":user.password},format="json")
-    print("---------------------"+user.username)
-    #assert login.status_code==status.HTTP_200_OK
+def test_get_restaurants(client,login_url,restaurant_url):
+    login=client.post(login_url,{"username":'SODYAM',"password":"sodyam@9050"},format="json")
+    assert login.status_code==status.HTTP_200_OK
     response=client.get(f'{restaurant_url}?lng=500&lat=900',format="json")
     assert response.status_code==status.HTTP_200_OK
     # ... la suite ...
@@ -155,11 +155,16 @@ def test_get_restaurants(client,login_url,restaurant_url,user):
 #Writing test for single restaurant
 #Now we are going to use the fixture created for adding new movie
 @pytest.mark.django_db
-def test_get_single_restaurant(client,restaurant_url):
+def test_get_single_restaurant(client,restaurant_url,login_url):
     initial_count=Restaurant.objects.count()
-    restaurant=Restaurant.objects.create(name="GOD BLESS",description="for fashion and actuality",lng=500,lat=400)
+    owner=User.objects.get(id=1)
+    
+    client.post(login_url,user_data,format='json') #<----------Login before
+
+    restaurant=Restaurant.objects.create(name="GOD BLESS",description="for fashion and actuality",lng=500,lat=400,owner=owner)
     assert Restaurant.objects.all()[initial_count].name=='GOD BLESS'  #verifions le dernier restaurant crée
-    response_create=client.post(restaurant_url,{'name':"ZONE SUR","description":"Goods party","lng":500,"lat":400},format="json")
+    
+    response_create=client.post(restaurant_url,{'name':"ZONE SUR","description":"Goods party","lng":500,"lat":400,"owner":owner},format="json")
     assert response_create.status_code==status.HTTP_201_CREATED  #<--- Testons si le restaurant a été bien crée
     assert Restaurant.objects.count()==2
     initial_count=Restaurant.objects.count()

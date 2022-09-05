@@ -8,6 +8,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from authentification.models import User 
 from restaurant.models import Restaurant 
+from django.http import HttpResponseRedirect
 
 DEFAULT_ENGINE="django.db.backends.postgresql_psycopg2"
 
@@ -30,7 +31,7 @@ def django_db_setup():
 
 @pytest.fixture
 def user():
-     return User.objects.create(name="SOSOKIN Yao Marius",username="SODYAM",password="sodyam@9050")
+     return User.objects.create(name="SODOKIN Yao Marius",username="SODYAM",password="sodyam@9050")
 
 @pytest.fixture
 def client():
@@ -47,11 +48,11 @@ def user_data():
 
 @pytest.fixture
 def login_url():
-    return reverse('login-user-list')
+    return reverse('login-list')
 
 @pytest.fixture
 def register_url():
-    return reverse('user-register')
+    return reverse('register-list')
 
 @pytest.fixture
 def  restaurant():
@@ -60,5 +61,5 @@ def  restaurant():
 @pytest.fixture
 def restaurant_url():
     
-    return reverse('restaurants')
+    return reverse('restaurants-list')
     

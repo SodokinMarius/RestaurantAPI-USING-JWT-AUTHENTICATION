@@ -58,6 +58,9 @@ class LoginSerializer(TokenObtainPairSerializer):
             update_last_login(None, self.user)
 
         return user_data
+    
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
 
 
 

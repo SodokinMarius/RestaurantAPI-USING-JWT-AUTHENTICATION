@@ -1,4 +1,5 @@
 
+from argparse import Namespace
 from django.contrib import admin
 from django.urls import path,include 
 from rest_framework import permissions
@@ -38,6 +39,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     path('user_auth/', views.obtain_auth_token),  #<-- endpoint utilisé enfin pour le token authentication
+
 
     path('',include('authentification.urls')),   # <----- authentification urls
     
