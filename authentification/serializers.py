@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields=['id','name','username','password','is_verified','is_active','is_staff','created_at','updated_at','restaurants']
         read_only_fields=('is_verified','is_active','is_staff','created_at','updated_at')
         lookup_field="username"
-        
+     
     
 class SignUpSerializer(serializers.ModelSerializer):
 

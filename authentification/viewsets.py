@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from rest_framework import  status 
 
 
-
 class UserViewSet(ModelViewSet):
     http_method_names = ['get']
     serializer_class = UserSerializer
@@ -23,20 +22,22 @@ class UserViewSet(ModelViewSet):
         self.check_object_permissions(self.request, user)
 
         return user
+    
 
 
 class LoginViewSet(ModelViewSet):
-    
+    http_method_names = ['post']   #Precising the allowed method in the wiewset
+
     permission_classes=[AllowAny] #<--------- Pour le moment
     serializer_class=LoginSerializer 
     
     def create(self, request, *args, **kwargs):
         serializer=self.get_serializer(data=request.data)
         
-        if serializer.is_valid() :
-            response={"message": "User connected successfully. ","data":serializer.validated_data}
-            return Response(data=response,status=status.HTTP_200_OK)
-        return  Response(data=serializer.errors,status_code=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True) 
+        serializer.save()
+        response={"message": "User connected successfully. ","data":serializer.validated_data}
+        return Response(data=response,status=status.HTTP_200_OK)
         
     
    
