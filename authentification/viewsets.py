@@ -24,7 +24,6 @@ class UserViewSet(ModelViewSet):
         return user
     
 
-
 class LoginViewSet(ModelViewSet):
     http_method_names = ['post']   #Precising the allowed method in the wiewset
 
@@ -39,8 +38,7 @@ class LoginViewSet(ModelViewSet):
         response={"message": "User connected successfully. ","data":serializer.validated_data}
         return Response(data=response,status=status.HTTP_200_OK)
         
-    
-   
+
 class SignupViewSet(ModelViewSet):
     
     serializer_class = SignUpSerializer
