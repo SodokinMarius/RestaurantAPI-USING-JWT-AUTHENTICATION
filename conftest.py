@@ -47,7 +47,7 @@ def user_data():
 
 @pytest.fixture
 def login_url():
-    return reverse('user-login')
+    return reverse('login-user-list')
 
 @pytest.fixture
 def register_url():
