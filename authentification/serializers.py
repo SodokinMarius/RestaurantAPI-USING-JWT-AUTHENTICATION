@@ -7,87 +7,57 @@ from restaurant.models import Restaurant
 from .models import User
 from django.contrib import auth
 #from django.contrib.auth.models import User 
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from rest_framework.exceptions import AuthenticationFailed
 
+from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.settings import api_settings
+from django.contrib.auth.models import update_last_login
+from django.core.exceptions import ObjectDoesNotExist
 
-class SignUpSerializer(serializers.ModelSerializer):
-    #restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
+
+class UserSerializer(serializers.ModelSerializer):
+    restaurants=serializers.PrimaryKeyRelatedField(many=True,queryset=Restaurant.objects.all())  #<-- Gerer en retour la relation
+    class Meta:
+        model=User
+        fields=['id','name','username','password','is_verified','is_active','is_staff','created_at','updated_at','restaurants']
+        read_only_fields=('is_verified','is_active','is_staff','created_at','updated_at')
+        lookup_field="username"
+     
     
+class SignUpSerializer(serializers.ModelSerializer):
+
     class Meta:
         model=User 
         fields=['name','username','password','is_verified','is_active','is_staff','created_at','updated_at']
-        #list_display=('name','username','password')
         read_only_fields=('is_verified','is_active','is_staff','created_at','updated_at')
-    
-    def validate(self,attrs):
-        username_exists=User.objects.filter(username=attrs["username"]).exists()
-
-        if username_exists:
-            raise ValidationError("Username has already been used")
-        return super().validate(attrs)
     
     def create(self,validated_data):
         try:
             user=User.objects.get(username=validated_data['username'])
         except User.DoesNotExist:
             user=User.objects.create_user(**validated_data)
-
+       
         return user
 
-class LoginSerializer(serializers.ModelSerializer):
-    name=serializers.CharField(max_length=100,read_only=True)
-    username=serializers.CharField(max_length=50)
-    password=serializers.CharField(max_length=50,write_only=True)
-    tokens=serializers.SerializerMethodField()
-    
-    def get_tokens(self, object):
-        user = User.objects.get(username=object['username'])
-        
-        return {
-            'refresh': user.create_jwt_pair_for_user()['refresh'],
-            'access': user.create_jwt_pair_for_user()['access']
-        }
 
-    class Meta:
-        model=User
-        fields=('name','username','password','tokens')
-        read_only_fields=('id','name','tokens','created_at','updated_at',)
-    
+class LoginSerializer(TokenObtainPairSerializer):
+    serializer_class=UserSerializer
     def validate(self, attrs):
-        username=attrs.get('username','')
-        password=attrs.get('password','')
-        
-        loged_user=User.objects.get(username=username)
-        print("======typed password======="+str(password))
-        print("======retrieved password======="+str(loged_user.password))
+        user_data= super().validate(attrs)
+
+        token_refresh = self.get_token(self.user)
+
+        user_data['user'] = self.serializer_class(self.user).data
+        user_data['refresh'] = str(token_refresh)
+        user_data['access'] = str(token_refresh.access_token)
+
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
+
+        return user_data
 
 
-        user=auth.authenticate(username=username,password=password)
-        print("======retrieved password======="+str(user.username))
-
-        
-        if user is None :
-            raise AuthenticationFailed('Invalid credentials, please try again !')
-        
-        if not user.is_active:
-            raise AuthenticationFailed("This account is disabled, contact admin !")
-        if not user.is_verified:
-            raise AuthenticationFailed("Username is not verified !")
-
-
-    #tokens creating
-        self.tokens= {
-            'refresh':user.create_jwt_pair_for_user()['refresh'],
-            'access': user.create_jwt_pair_for_user()['access']
-        }
-        user.tokens=self.tokens
-
-        return {
-                "username":user.username,
-                "password":user.password,
-                "tokens":user.tokens
-            }
-            
-        return super().validate(attrs)
 

@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
      'rest_authtoken',
      'drf_yasg', #<--------- swagger (no more used)
-     'rest_auth',
-     #'drf-spectacular', #<--- schema generator used
+    
+     
 ]
 
 MIDDLEWARE = [
@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 #Permissions avec Django Rest Framework
@@ -56,18 +57,18 @@ REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "errors",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",   #<----- Config important
+        #"rest_framework.authentication.TokenAuthentication",   #<----- Config important
         "rest_framework_simplejwt.authentication.JWTAuthentication",   #<----- JWT config
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",  #<---- Configuration pour la permission
-    ), 
+    #"DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated", 
+                                   #<---- Configuration pour la permission
+   # ), 
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 3,
     
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_authtoken.auth.AuthTokenAuthentication', # <---- rest_authtoken config
     ),
-    #'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',   # <------- line for spectaculor config
     
 
 
@@ -95,7 +96,7 @@ SWAGGER_SETTINGS={
 # Configuration des paramètres JWT
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,

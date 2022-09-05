@@ -5,8 +5,8 @@ def test_restaurant_serializer_validation():
     valid_serializer_data={
          'name':"Nouveau R",
          'description':"combat",
-         'lng': "500",
-         'lat':"560",   
+         'lng': 500,
+         'lat':560,   
      }
      
     serializer=RestaurantSerializer(data=valid_serializer_data)
